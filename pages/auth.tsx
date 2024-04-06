@@ -1,3 +1,4 @@
+import axios from "@/node_modules/axios/index";
 import Input from "@/components/input";
 import { useCallback, useState } from "react";
 
@@ -9,7 +10,19 @@ const Auth = () => {
     const[variant, setVariant] = useState('login');
     const toggleVariant = useCallback(() => {
         setVariant((currentVariant) => currentVariant === 'login' ? 'register' : 'login' );
-    }, [])
+    }, []);
+
+    const register = useCallback(async () => {
+        try{
+            await axios.post('/api/register',{
+                email,
+                name,
+                password
+            });
+        }catch (error) {
+            console.log(error);
+        }
+    }, [email, name, password]);
 
      return(
        <div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
@@ -25,18 +38,19 @@ const Auth = () => {
                 <div className="flex flex-col gap-4">
                     {variant === 'register' && (
                       <Input
-                      label="Username"
-                      onChange={(ev: any) => setName(ev.target.value)}
-                      id="name"
-                      value={name}
+                        label="Username"
+                        onChange={(ev: any) => setName(ev.target.value)}
+                        id="name"
+                        type="text"
+                        value={name}  
                       />
                     )}
                      <Input
-                    label="Email"
-                    onChange={(ev: any) => setEmail(ev.target.value)}
-                    id="email"
-                    type="email"
-                    value={email}
+                        label="Email"
+                        onChange={(ev: any) => setEmail(ev.target.value)}
+                        id="email"
+                        type="email"
+                        value={email}
                     />
                      <Input
                     label="Password"
@@ -46,7 +60,7 @@ const Auth = () => {
                     value={password}
                     />
                 </div>
-                <button className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
+                <button onClick={register} className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
                    {variant === 'login' ? 'Login' : 'Sign up'} 
                 </button>
                 <p className="text-neutral-500 mt-12">
